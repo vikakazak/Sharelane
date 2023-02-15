@@ -97,6 +97,34 @@ public class SignUpTest {
         driver.quit();
     }
 
+    @Test
+    public void typeOfPasswordField() {
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
 
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://sharelane.com/cgi-bin/register.py?page=1&zip_code=11111");
+        String actualResult = driver.findElement((By.name("password1"))).getAttribute("type");
+        assertEquals(actualResult,"password",
+                "Field's type is not password");
+        driver.quit();
+    }
+
+    @Test
+    public void differentPasswords() {
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://sharelane.com/cgi-bin/register.py?page=1&zip_code=11111");
+        driver.findElement(By.name("first_name")).sendKeys("Vika");
+        driver.findElement(By.name("last_name")).sendKeys("Kazak");
+        driver.findElement(By.name("email")).sendKeys("olololo@gmaa.com");
+        driver.findElement(By.name("password1")).sendKeys("1234");
+        driver.findElement(By.name("password2")).sendKeys("5678");
+        driver.findElement(By.cssSelector("[value=Register]")).click();
+        String actualError = driver.findElement(By.cssSelector("[class=error_message]")).getText();
+        assertEquals(actualError,"Oops, error on page. Some of your fields have invalid data or email was previously used",
+                "Password and Confirm password fields may not match");
+        driver.quit();
+    }
 
 }
